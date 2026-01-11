@@ -1,0 +1,156 @@
+[gd_scene load_steps=4 format=3 uid="uid://bfraauk1jj2d8"]
+
+[ext_resource type="Script" uid="uid://c6umf2e0kab0g" path="res://scenes/main.gd" id="1_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://c72cmodx3jaun" path="res://scenes/preview_3d.tscn" id="1_o5qli"]
+[ext_resource type="StyleBox" uid="uid://rkoxuyglbnrx" path="res://theme/panel_light.tres" id="2_sugp2"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0wfyh")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+split_offset = 200
+
+[node name="EditorContainer" type="VBoxContainer" parent="HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="CodeEditor" type="CodeEdit" parent="HSplitContainer/EditorContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "// [ REDACTED ] shader by BalaDelSilver
+// godotshaders.com/shader/redacted
+
+shader_type spatial;
+render_mode blend_mix,depth_draw_opaque,cull_front,diffuse_toon,specular_toon,unshaded,shadows_disabled,ambient_light_disabled,ensure_correct_normals;
+uniform vec2 scroll_speed = vec2(3.0, 5.0);
+uniform float static_intensity : hint_range(0.0, 1.0, 0.05) = 0.25;
+uniform vec3 color : source_color = vec3(0.0);
+uniform float tex_scale: hint_range(0.5, 10.0, 0.01) = 3.0;
+uniform sampler2D albedo_tex : hint_default_white;
+
+float rand(vec2 co){
+	return fract(sin(dot(co ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
+void fragment() {
+	vec2 base_uv = vec2(SCREEN_UV.x - 0.5, SCREEN_UV.y - 0.5) * (1.0 / (tex_scale));
+	base_uv.x *= VIEWPORT_SIZE.x / VIEWPORT_SIZE.y;
+	
+	float depth = length(NODE_POSITION_WORLD - CAMERA_POSITION_WORLD) + 0.5;
+	
+	vec4 tex = texture(albedo_tex, base_uv * depth + (scroll_speed * vec2(-1.0, 1.0) * TIME * 0.1));
+	
+	tex.rgb = mix(vec3(0.0), tex.rgb, tex.a);
+	
+	float noise = pow(rand(UV * TIME * 0.1), 3) * static_intensity;
+	vec3 cnoise = mix(color, vec3(1.0) - color, noise);
+	
+	vec3 final = mix(cnoise * tex.rgb, cnoise, noise * 0.5);
+	
+	ALBEDO = final;
+}"
+caret_blink = true
+draw_tabs = true
+symbol_tooltip_on_hover = true
+line_folding = true
+gutters_draw_bookmarks = true
+gutters_draw_line_numbers = true
+gutters_draw_fold_gutter = true
+code_completion_enabled = true
+indent_automatic = true
+auto_brace_completion_enabled = true
+
+[node name="StatusBar" type="PanelContainer" parent="HSplitContainer/EditorContainer"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_sugp2")
+
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/EditorContainer/StatusBar"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
+
+[node name="StatusLabel" type="RichTextLabel" parent="HSplitContainer/EditorContainer/StatusBar/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/normal_font_size = 14
+text = "OK"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="FPSLabel" type="RichTextLabel" parent="HSplitContainer/EditorContainer/StatusBar/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/normal_font_size = 14
+text = "FPS: ##"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+shortcut_keys_enabled = false
+
+[node name="PreviewContainer" type="VBoxContainer" parent="HSplitContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="VSplitContainer" type="VSplitContainer" parent="HSplitContainer/PreviewContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="HSplitContainer/PreviewContainer/VSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="HSplitContainer/PreviewContainer/VSplitContainer/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(438, 358)
+render_target_update_mode = 4
+
+[node name="Preview3D" parent="HSplitContainer/PreviewContainer/VSplitContainer/SubViewportContainer/SubViewport" instance=ExtResource("1_o5qli")]
+unique_name_in_owner = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HSplitContainer/PreviewContainer/VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="HSplitContainer/PreviewContainer/VSplitContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/PreviewContainer/VSplitContainer/ScrollContainer/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ShaderProperties" type="VBoxContainer" parent="HSplitContainer/PreviewContainer/VSplitContainer/ScrollContainer/PanelContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

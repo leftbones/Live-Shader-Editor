@@ -1,0 +1,15 @@
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://dd6r501x33rwy"]
+
+[ext_resource type="StyleBox" uid="uid://dvf7pat58vx2g" path="res://theme/panel.tres" id="1_f7io8"]
+[ext_resource type="StyleBox" uid="uid://rkoxuyglbnrx" path="res://theme/panel_light.tres" id="1_l8uce"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_f7io8"]
+
+[resource]
+CodeEdit/font_sizes/font_size = 14
+CodeEdit/styles/normal = ExtResource("1_f7io8")
+Panel/styles/panel = ExtResource("1_f7io8")
+PanelContainer/styles/panel = ExtResource("1_f7io8")
+SplitContainer/constants/separation = 4
+SplitContainer/icons/grabber = SubResource("ImageTexture_f7io8")
+SplitContainer/styles/split_bar_background = ExtResource("1_l8uce")
