@@ -5,7 +5,7 @@ const LOG_PATH: String = "user://logs/godot.log"
 const MESSAGE_FINISH: String = "COMPILE FINISHED"
 const MESSAGE_ERROR: String = "SHADER ERROR: "
 
-const SYNTAX_TYPES: PackedStringArray = ["void", "bool", "int", "float", "vec2", "vec3", "vec4", "mat2", "mat3", "mat4", "sampler2D", "samplerCube"]
+const SYNTAX_TYPES: PackedStringArray = ["void", "bool", "int", "float", "vec2", "vec3", "vec4", "sampler2D"]
 const SYNTAX_KEYWORDS: PackedStringArray = ["if", "else", "for", "white", "do", "return", "break", "continue", "discard"]
 const SYNTAX_BUILTINS: PackedStringArray = ["texture", "mix", "dot", "cross", "normalize", "length", "distance", "reflect", "sin", "cos", "tan", "abs", "min", "max", "clamp", "step", "smoothstep"]
 const SYNTAX_SHADERS: PackedStringArray = ["shader_type", "render_mode", "uniform", "varying", "attribute", "const", "in", "out", "inout"]
@@ -17,6 +17,7 @@ const SYNTAX_SHADERS: PackedStringArray = ["shader_type", "render_mode", "unifor
 @onready var shader_properties: VBoxContainer = %ShaderProperties
 
 # Preview
+var parser: Parser = Parser.new()
 var active_preview: Variant = null
 
 # Compilation
@@ -174,35 +175,35 @@ func _check_compile_errors() -> void:
 
 
 # Parse the shader code to extract uniform variables
-func _get_shader_uniforms() -> Array[Dictionary]:
-	var uniforms: Array[Dictionary] = []
-	var shader: Shader = active_preview.shader_material.shader
+# func _get_shader_uniforms() -> Array[Dictionary]:
+# 	var uniforms: Array[Dictionary] = []
+# 	var shader: Shader = active_preview.shader_material.shader
 
-	var lines: PackedStringArray = code_editor.text.split("\n")
-	var ignore: PackedStringArray = ["=", ":"]
-	for line in lines:
-		line = line.strip_edges()
-		if line.begins_with("uniform"):
-			var parts: PackedStringArray = []
-			line = line.replace("uniform", "").strip_edges()
-			var idx: int = 0;
-			while idx < line.length() - 1:
-				if line[idx] == " ":
-					idx += 1
-				else:
-					var token: String = ""
-					while line[idx] != " ":
-						token += line[idx]
-						idx += 1
-						if idx >= line.length() - 1:
-							break
+# 	var lines: PackedStringArray = code_editor.text.split("\n")
+# 	var ignore: PackedStringArray = ["=", ":"]
+# 	for line in lines:
+# 		line = line.strip_edges()
+# 		if line.begins_with("uniform"):
+# 			var parts: PackedStringArray = []
+# 			line = line.replace("uniform", "").strip_edges()
+# 			var idx: int = 0;
+# 			while idx < line.length() - 1:
+# 				if line[idx] == " ":
+# 					idx += 1
+# 				else:
+# 					var token: String = ""
+# 					while line[idx] != " ":
+# 						token += line[idx]
+# 						idx += 1
+# 						if idx >= line.length() - 1:
+# 							break
 
-					if not ignore.has(token):
-						parts.append(token)
+# 					if not ignore.has(token):
+# 						parts.append(token)
 			
-			print(parts)
+# 			print(parts)
 
-	return uniforms
+# 	return uniforms
 
 
 # Attempt to compile the shader code from the code editor
@@ -220,6 +221,8 @@ func _compile_shader() -> void:
 	for child in shader_properties.get_children():
 		child.queue_free()
 
-	var uniforms: Array[Dictionary] = _get_shader_uniforms()
-
-	
+	var uniforms: Array[Parser.Uniform] = parser.get_shader_uniforms(code_editor.text)
+	for uniform in uniforms:
+		var label: Label = Label.new()
+		label.text = "%s (%s) = %s" % [uniform.name, uniform.type, uniform.value]
+		shader_properties.add_child(label)
