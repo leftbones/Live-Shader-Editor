@@ -33,7 +33,7 @@ environment = SubResource("Environment_rpypr")
 transform = Transform3D(0.7071068, 0.5, -0.5, 0, 0.7071068, 0.70710677, 0.7071068, -0.5, 0.5, 0, 0, 0)
 
 [node name="CubeMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.27762395, 0.7482251, 0.6009315, 0.74408174, 0.22745931, -0.6265938, -0.6061079, 0.6217183, -0.49396712, 0, 0, 0)
+transform = Transform3D(0.27788818, 0.74889195, 0.60161364, 0.74478984, 0.22756594, -0.6272973, -0.6066846, 0.62239414, -0.49452925, 0, 0, 0)
 material_override = SubResource("ShaderMaterial_suyh2")
 mesh = SubResource("BoxMesh_rpypr")
 

@@ -30,7 +30,7 @@ var preview_mesh: MeshInstance3D
 @export_range(-1.0, 1.0, 0.1) var animate_speed_x: float = 1.0
 @export_range(-1.0, 1.0, 0.1) var animate_speed_y: float = 1.0
 @export_tool_button("Reset Rotation", "Callable")
-var reset_button_action: Callable = _reset_preview
+var reset_button_action: Callable = reset_preview
 
 # Defaults
 var _default_camera_fov: float = 50.0
@@ -40,11 +40,15 @@ var _default_animation_speed: Vector2 = Vector2(0.5, 0.5)
 
 # Called when the node enters the scene tree for the first time
 func _ready() -> void:
+	_default_mesh_rotation = Vector2(
+		cube_mesh.rotation_degrees.x,
+		cube_mesh.rotation_degrees.y,
+	)
+
 	await get_tree().process_frame
 
 	shader_material = ShaderMaterial.new()
 	_set_preview_mesh()
-
 
 
 # Called once every frame
@@ -61,7 +65,7 @@ func _process(delta: float) -> void:
 
 
 # Reset the preview mesh to its default properties
-func _reset_preview() -> void:
+func reset_preview() -> void:
 	if preview_mesh == null: return
 	preview_mesh.rotation_degrees = Vector3(_default_mesh_rotation.x, _default_mesh_rotation.y, 0)
 	camera.fov = _default_camera_fov
@@ -69,7 +73,7 @@ func _reset_preview() -> void:
 
 # Set the preview mesh based on the selected type
 func _set_preview_mesh() -> void:
-	_reset_preview()
+	reset_preview()
 
 	cube_mesh.visible = false
 	quad_mesh.visible = false
@@ -83,3 +87,8 @@ func _set_preview_mesh() -> void:
 			quad_mesh.visible = true
 
 	preview_mesh.material_override = shader_material
+
+
+# Toggle the animation state
+func toggle_animation(enabled: bool) -> void:
+	animate = enabled

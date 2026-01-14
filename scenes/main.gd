@@ -21,6 +21,9 @@ const SYNTAX_SHADERS: PackedStringArray = ["shader_type", "render_mode", "unifor
 @onready var status_label: RichTextLabel = %StatusLabel
 @onready var fps_label: RichTextLabel = %FPSLabel
 @onready var preview_container: VBoxContainer = %PreviewContainer
+@onready var viewport_settings: VBoxContainer = %ViewportSettings
+@onready var animate_checkbox: CheckBox = %AnimateCheckBox
+@onready var reset_preview_button: Button = %ResetPreviewButton
 @onready var shader_properties: VBoxContainer = %ShaderProperties
 
 # Preview
@@ -55,12 +58,9 @@ var colors: Dictionary[String, Color] = {
 
 # Called when the node enters the scene tree for the first time
 func _ready() -> void:
-	# Connect signals
-	code_editor.text_changed.connect(_start_update_timer)
-	preview_container.gui_input.connect(_on_preview_gui_input)
-
 	# Setup shader preview
 	active_preview = %Preview3D
+	viewport_settings.modulate.a = 0.0
 
 	# Setup regex error parsing
 	compile_error_regex.compile("E\\s+(\\d+)->")
@@ -87,6 +87,20 @@ func _ready() -> void:
 		syntax_highlighter.add_keyword_color(keyword , colors["syntax_symbol"])
 
 	code_editor.syntax_highlighter = syntax_highlighter
+
+	# Connect signals
+	code_editor.text_changed.connect(_start_update_timer)
+	preview_container.gui_input.connect(_on_preview_gui_input)
+	preview_container.mouse_entered.connect(func():
+		var tween: Tween = get_tree().create_tween()
+		tween.tween_property(viewport_settings, "modulate:a", 1.0, 0.2)
+	)
+	preview_container.mouse_exited.connect(func():
+		var tween: Tween = get_tree().create_tween()
+		tween.tween_property(viewport_settings, "modulate:a", 0.0, 0.2)
+	)
+	animate_checkbox.toggled.connect(active_preview.toggle_animation)
+	reset_preview_button.pressed.connect(active_preview.reset_preview)
 
 	# Wait until everything is ready before the first compile
 	await get_tree().process_frame
