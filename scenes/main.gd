@@ -10,6 +10,13 @@ const SYNTAX_KEYWORDS: PackedStringArray = ["if", "else", "for", "white", "do", 
 const SYNTAX_BUILTINS: PackedStringArray = ["texture", "mix", "dot", "cross", "normalize", "length", "distance", "reflect", "sin", "cos", "tan", "abs", "min", "max", "clamp", "step", "smoothstep"]
 const SYNTAX_SHADERS: PackedStringArray = ["shader_type", "render_mode", "uniform", "varying", "attribute", "const", "in", "out", "inout"]
 
+@onready var uniform_number_input_scene: PackedScene = preload("res://scenes/ui/uniform_number_input.tscn")
+@onready var uniform_vec2_input_scene: PackedScene = preload("res://scenes/ui/uniform_vec_2_input.tscn")
+@onready var uniform_vec3_input_scene: PackedScene = preload("res://scenes/ui/uniform_vec_3_input.tscn")
+@onready var uniform_vec4_input_scene: PackedScene = preload("res://scenes/ui/uniform_vec_4_input.tscn")
+@onready var uniform_color_input_scene: PackedScene = preload("res://scenes/ui/uniform_color_input.tscn")
+@onready var uniform_texture_input_scene: PackedScene = preload("res://scenes/ui/uniform_texture_input.tscn")
+
 @onready var code_editor: CodeEdit = %CodeEditor
 @onready var status_label: RichTextLabel = %StatusLabel
 @onready var fps_label: RichTextLabel = %FPSLabel
@@ -126,6 +133,11 @@ func _start_update_timer() -> void:
 	update_timer = 0
 
 
+# Set a shader parameter on the active preview's shader material
+func _set_shader_parameter(uniform_name: String, uniform_value: Variant) -> void:
+	active_preview.shader_material.set_shader_parameter(uniform_name, uniform_value)
+
+
 # Set the status message in the UI
 func _set_status_message(message: String) -> void:
 	status_label.text = message
@@ -174,38 +186,6 @@ func _check_compile_errors() -> void:
 		status_label.modulate = Color(1.0, 1.0, 1.0)
 
 
-# Parse the shader code to extract uniform variables
-# func _get_shader_uniforms() -> Array[Dictionary]:
-# 	var uniforms: Array[Dictionary] = []
-# 	var shader: Shader = active_preview.shader_material.shader
-
-# 	var lines: PackedStringArray = code_editor.text.split("\n")
-# 	var ignore: PackedStringArray = ["=", ":"]
-# 	for line in lines:
-# 		line = line.strip_edges()
-# 		if line.begins_with("uniform"):
-# 			var parts: PackedStringArray = []
-# 			line = line.replace("uniform", "").strip_edges()
-# 			var idx: int = 0;
-# 			while idx < line.length() - 1:
-# 				if line[idx] == " ":
-# 					idx += 1
-# 				else:
-# 					var token: String = ""
-# 					while line[idx] != " ":
-# 						token += line[idx]
-# 						idx += 1
-# 						if idx >= line.length() - 1:
-# 							break
-
-# 					if not ignore.has(token):
-# 						parts.append(token)
-			
-# 			print(parts)
-
-# 	return uniforms
-
-
 # Attempt to compile the shader code from the code editor
 func _compile_shader() -> void:
 	# Update the shader material
@@ -223,6 +203,92 @@ func _compile_shader() -> void:
 
 	var uniforms: Array[Parser.Uniform] = parser.get_shader_uniforms(code_editor.text)
 	for uniform in uniforms:
-		var label: Label = Label.new()
-		label.text = "%s (%s) = %s" % [uniform.name, uniform.type, uniform.value]
-		shader_properties.add_child(label)
+		#
+		# Float
+		if uniform.type == "float":
+			var uniform_input: UniformNumberInput = uniform_number_input_scene.instantiate()
+			shader_properties.add_child(uniform_input)
+
+			uniform_input.init(uniform.name, uniform.value)
+
+			uniform_input.value_changed.connect(_set_shader_parameter)
+
+		#
+		# Vec2
+		elif uniform.type == "vec2":
+			var uniform_input: UniformVec2Input = uniform_vec2_input_scene.instantiate()
+			shader_properties.add_child(uniform_input)
+
+			var vec2_values: PackedStringArray = uniform.value.replace("vec2(", "").replace(")", "").split(",")
+			if vec2_values.size() != 2:
+				vec2_values = [vec2_values[0], vec2_values[0]]
+
+			uniform_input.init(uniform.name, Vector2(
+				vec2_values[0].to_float(),
+				vec2_values[1].to_float()
+			))
+
+			uniform_input.value_changed.connect(_set_shader_parameter)
+
+		#
+		# Vec3 (+ source_color hint)
+		elif uniform.type == "vec3":
+			var uniform_input := uniform_color_input_scene.instantiate() if uniform.hint == "source_color" else uniform_vec3_input_scene.instantiate()
+			shader_properties.add_child(uniform_input)
+
+			var vec3_values: PackedStringArray = uniform.value.replace("vec3(", "").replace(")", "").split(",")
+			if vec3_values.size() != 3:
+				vec3_values = [vec3_values[0], vec3_values[0], vec3_values[0]]
+
+			uniform_input.init(uniform.name, Vector3(
+				vec3_values[0].to_float(),
+				vec3_values[1].to_float(),
+				vec3_values[2].to_float()
+			))
+
+			uniform_input.value_changed.connect(_set_shader_parameter)
+
+		#
+		# Vec4
+		elif uniform.type == "vec4":
+			var uniform_input: UniformVec4Input = uniform_vec4_input_scene.instantiate()
+			shader_properties.add_child(uniform_input)
+
+			var vec4_values: PackedStringArray = uniform.value.replace("vec4(", "").replace(")", "").split(",")
+			if vec4_values.size() != 4:
+				vec4_values = [vec4_values[0], vec4_values[0], vec4_values[0], vec4_values[0]]
+
+			uniform_input.init(uniform.name, Vector4(
+				vec4_values[0].to_float(),
+				vec4_values[1].to_float(),
+				vec4_values[2].to_float(),
+				vec4_values[3].to_float()
+			))
+
+			uniform_input.value_changed.connect(_set_shader_parameter)
+
+		#
+		# Sampler2D
+		elif uniform.type == "sampler2D":
+			var uniform_input: UniformTextureInput = uniform_texture_input_scene.instantiate()
+			shader_properties.add_child(uniform_input)
+
+			var vec4_values: PackedStringArray = uniform.value.split(",")
+			if vec4_values.size() != 4:
+				vec4_values = [vec4_values[0], vec4_values[0], vec4_values[0], vec4_values[0]]
+
+			uniform_input.init(uniform.name, Vector4(
+				vec4_values[0].to_float(),
+				vec4_values[1].to_float(),
+				vec4_values[2].to_float(),
+				vec4_values[3].to_float()
+			))
+
+			uniform_input.value_changed.connect(_set_shader_parameter)
+		
+		#
+		# Other
+		else:
+			var label: Label = Label.new()
+			label.text = "%s (%s) = %s" % [uniform.name, uniform.type, uniform.value]
+			shader_properties.add_child(label)
