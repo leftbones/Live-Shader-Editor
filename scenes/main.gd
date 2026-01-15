@@ -103,10 +103,12 @@ func _ready() -> void:
 	preview_container.mouse_entered.connect(func():
 		var tween: Tween = get_tree().create_tween()
 		tween.tween_property(viewport_settings, "modulate:a", 1.0, 0.2)
+		active_preview.hovered = true
 	)
 	preview_container.mouse_exited.connect(func():
 		var tween: Tween = get_tree().create_tween()
 		tween.tween_property(viewport_settings, "modulate:a", 0.0, 0.2)
+		active_preview.hovered = false
 	)
 	animate_checkbox.toggled.connect(active_preview.toggle_animation)
 	reset_preview_button.pressed.connect(active_preview.reset_preview)
@@ -144,6 +146,9 @@ func _process(delta: float) -> void:
 
 # Handle mouse input on the 3D preview (for zooming)
 func _on_preview_gui_input(event: InputEvent) -> void:
+	if not active_preview.hovered:
+		return
+
 	if event is InputEventMouseButton and event.is_pressed():
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			active_preview.camera.fov = max(25, active_preview.camera.fov - 5.0)

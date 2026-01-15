@@ -23,6 +23,7 @@ var preview_mesh_type: int = 0:
 		_set_preview_mesh()
 
 var preview_mesh: MeshInstance3D
+var hovered: bool = false
 
 # Animation
 @export_group("Animation")
