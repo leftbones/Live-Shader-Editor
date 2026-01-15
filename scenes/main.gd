@@ -11,6 +11,7 @@ const SYNTAX_BUILTINS: PackedStringArray = ["texture", "mix", "dot", "cross", "n
 const SYNTAX_SHADERS: PackedStringArray = ["shader_type", "render_mode", "uniform", "varying", "attribute", "const", "in", "out", "inout"]
 
 @onready var uniform_number_input_scene: PackedScene = preload("res://scenes/ui/uniform_number_input.tscn")
+@onready var uniform_range_input_scene: PackedScene = preload("res://scenes/ui/uniform_range_input.tscn")
 @onready var uniform_vec2_input_scene: PackedScene = preload("res://scenes/ui/uniform_vec_2_input.tscn")
 @onready var uniform_vec3_input_scene: PackedScene = preload("res://scenes/ui/uniform_vec_3_input.tscn")
 @onready var uniform_vec4_input_scene: PackedScene = preload("res://scenes/ui/uniform_vec_4_input.tscn")
@@ -25,6 +26,11 @@ const SYNTAX_SHADERS: PackedStringArray = ["shader_type", "render_mode", "unifor
 @onready var animate_checkbox: CheckBox = %AnimateCheckBox
 @onready var reset_preview_button: Button = %ResetPreviewButton
 @onready var shader_properties: VBoxContainer = %ShaderProperties
+@onready var load_shader_dialog: FileDialog = %LoadShaderDialog
+@onready var save_shader_dialog: FileDialog = %SaveShaderDialog
+@onready var file_menu: PopupMenu = %File
+@onready var options_menu: PopupMenu = %Options
+@onready var help_menu: PopupMenu = %Help
 
 # Preview
 var parser: Parser = Parser.new()
@@ -54,6 +60,9 @@ var colors: Dictionary[String, Color] = {
 	"syntax_number": Color("a1ffe0"),
 	"syntax_string": Color("ffeda1"),
 }
+
+# File Operations
+var save_path: String = ""
 
 
 # Called when the node enters the scene tree for the first time
@@ -220,12 +229,22 @@ func _compile_shader() -> void:
 		#
 		# Float
 		if uniform.type == "float":
-			var uniform_input: UniformNumberInput = uniform_number_input_scene.instantiate()
-			shader_properties.add_child(uniform_input)
+			if uniform.hint.begins_with("hint_range"):
+				var uniform_input: UniformRangeInput = uniform_range_input_scene.instantiate()
+				shader_properties.add_child(uniform_input)
 
-			uniform_input.init(uniform.name, uniform.value)
+				var range_values: PackedStringArray = uniform.hint.replace("hint_range(", "").replace(")", "").split(",")
 
-			uniform_input.value_changed.connect(_set_shader_parameter)
+				uniform_input.init(uniform.name, uniform.value, range_values[0], range_values[1], range_values[2])
+
+				uniform_input.value_changed.connect(_set_shader_parameter)
+			else:
+				var uniform_input: UniformNumberInput = uniform_number_input_scene.instantiate()
+				shader_properties.add_child(uniform_input)
+
+				uniform_input.init(uniform.name, uniform.value)
+
+				uniform_input.value_changed.connect(_set_shader_parameter)
 
 		#
 		# Vec2
@@ -287,16 +306,7 @@ func _compile_shader() -> void:
 			var uniform_input: UniformTextureInput = uniform_texture_input_scene.instantiate()
 			shader_properties.add_child(uniform_input)
 
-			var vec4_values: PackedStringArray = uniform.value.split(",")
-			if vec4_values.size() != 4:
-				vec4_values = [vec4_values[0], vec4_values[0], vec4_values[0], vec4_values[0]]
-
-			uniform_input.init(uniform.name, Vector4(
-				vec4_values[0].to_float(),
-				vec4_values[1].to_float(),
-				vec4_values[2].to_float(),
-				vec4_values[3].to_float()
-			))
+			uniform_input.init(uniform.name) # I don't think it's possible to set textures in shader code directly, so there's no value to parse here
 
 			uniform_input.value_changed.connect(_set_shader_parameter)
 		

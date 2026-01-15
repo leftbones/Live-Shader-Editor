@@ -1,8 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://bfraauk1jj2d8"]
+[gd_scene load_steps=8 format=3 uid="uid://bfraauk1jj2d8"]
 
 [ext_resource type="Script" uid="uid://c6umf2e0kab0g" path="res://scenes/main.gd" id="1_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://c72cmodx3jaun" path="res://scenes/preview_3d.tscn" id="1_o5qli"]
+[ext_resource type="StyleBox" uid="uid://ddjp7wvxtq760" path="res://theme/button_normal.tres" id="2_o6xl0"]
 [ext_resource type="StyleBox" uid="uid://rkoxuyglbnrx" path="res://theme/panel_light.tres" id="2_sugp2"]
+[ext_resource type="StyleBox" uid="uid://dc5u5oyj7fdss" path="res://theme/button_disabled.tres" id="3_tipki"]
+[ext_resource type="StyleBox" uid="uid://boi83gcjl8k8m" path="res://theme/button_pressed.tres" id="4_85g3d"]
+[ext_resource type="StyleBox" uid="uid://baus12mxqahcx" path="res://theme/button_hover.tres" id="5_choun"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -26,6 +30,56 @@ split_offset = 200
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
+
+[node name="MenuBarContainer" type="PanelContainer" parent="HSplitContainer/EditorContainer"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_sugp2")
+
+[node name="MenuBar" type="MenuBar" parent="HSplitContainer/EditorContainer/MenuBarContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = ExtResource("2_o6xl0")
+theme_override_styles/disabled = ExtResource("3_tipki")
+theme_override_styles/pressed = ExtResource("4_85g3d")
+theme_override_styles/hover = ExtResource("5_choun")
+
+[node name="File" type="PopupMenu" parent="HSplitContainer/EditorContainer/MenuBarContainer/MenuBar"]
+unique_name_in_owner = true
+oversampling_override = 1.0
+size = Vector2i(100, 133)
+item_count = 5
+item_0/text = "New"
+item_0/id = 4
+item_1/text = "Open"
+item_1/id = 0
+item_2/text = "Save"
+item_2/id = 1
+item_3/text = "Save As"
+item_3/id = 2
+item_4/text = "Exit"
+item_4/id = 3
+
+[node name="Options" type="PopupMenu" parent="HSplitContainer/EditorContainer/MenuBarContainer/MenuBar"]
+unique_name_in_owner = true
+oversampling_override = 1.0
+size = Vector2i(136, 100)
+item_count = 2
+item_0/text = "Theme Editor"
+item_0/id = 1
+item_0/disabled = true
+item_1/text = "Keybindings"
+item_1/id = 2
+item_1/disabled = true
+
+[node name="Help" type="PopupMenu" parent="HSplitContainer/EditorContainer/MenuBarContainer/MenuBar"]
+unique_name_in_owner = true
+oversampling_override = 1.0
+size = Vector2i(164, 100)
+item_count = 2
+item_0/text = "View on GitHub"
+item_0/id = 0
+item_1/text = "Report an issue"
+item_1/id = 1
 
 [node name="CodeEditor" type="CodeEdit" parent="HSplitContainer/EditorContainer"]
 unique_name_in_owner = true
@@ -75,18 +129,18 @@ code_completion_enabled = true
 indent_automatic = true
 auto_brace_completion_enabled = true
 
-[node name="StatusBar" type="PanelContainer" parent="HSplitContainer/EditorContainer"]
+[node name="StatusBarContainer" type="PanelContainer" parent="HSplitContainer/EditorContainer"]
 layout_mode = 2
 theme_override_styles/panel = ExtResource("2_sugp2")
 
-[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/EditorContainer/StatusBar"]
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/EditorContainer/StatusBarContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 2
 
-[node name="StatusLabel" type="RichTextLabel" parent="HSplitContainer/EditorContainer/StatusBar/MarginContainer"]
+[node name="StatusLabel" type="RichTextLabel" parent="HSplitContainer/EditorContainer/StatusBarContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
@@ -96,7 +150,7 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 0
 
-[node name="FPSLabel" type="RichTextLabel" parent="HSplitContainer/EditorContainer/StatusBar/MarginContainer"]
+[node name="FPSLabel" type="RichTextLabel" parent="HSplitContainer/EditorContainer/StatusBarContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
@@ -180,3 +234,17 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="LoadShaderDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "Load"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.gdshader")
+use_native_dialog = true
+
+[node name="SaveShaderDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "Save"
+access = 2
+use_native_dialog = true
