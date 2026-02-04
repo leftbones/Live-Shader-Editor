@@ -12,8 +12,13 @@ config_version=5
 
 config/name="live_shaders"
 run/main_scene="uid://bfraauk1jj2d8"
-config/features=PackedStringArray("4.5", "Mobile")
+config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
+
+[autoload]
+
+SignalBus="*uid://dck2xyteiw8o0"
+Config="*uid://cys2ihvsv40il"
 
 [debug]
 
@@ -36,7 +41,7 @@ project/assembly_name="live_shaders"
 
 theme/default_font_multichannel_signed_distance_field=true
 theme/custom="uid://dd6r501x33rwy"
-theme/custom_font="uid://dg7ajq1qcxnxs"
+theme/custom_font="uid://bq485xmlw8iij"
 
 [input]
 

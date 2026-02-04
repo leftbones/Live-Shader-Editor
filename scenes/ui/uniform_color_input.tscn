@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://bhe8wvfr5gbhp"]
+[gd_scene format=3 uid="uid://bhe8wvfr5gbhp"]
 
-[ext_resource type="Script" uid="uid://b7lmcfhvd4otx" path="res://scenes/ui/uniform_color_input.gd" id="1_rlv0s"]
+[ext_resource type="Script" uid="uid://dffhowwahdmbv" path="res://scenes/ui/uniform_color_input.gd" id="1_rlv0s"]
 
-[node name="UniformColorInput" type="HBoxContainer"]
+[node name="UniformColorInput" type="HBoxContainer" unique_id=2041306942]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -10,10 +10,10 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rlv0s")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1127927779]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ColorPickerButton" type="ColorPickerButton" parent="."]
+[node name="ColorPickerButton" type="ColorPickerButton" parent="." unique_id=1493865234]
 custom_minimum_size = Vector2(96, 0)
 layout_mode = 2

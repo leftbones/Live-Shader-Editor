@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://bahb7ai0efpl1"]
+[gd_scene format=3 uid="uid://bahb7ai0efpl1"]
 
-[ext_resource type="Script" uid="uid://bdoohedlx0y1h" path="res://scenes/ui/uniform_range_input.gd" id="1_yg3ag"]
+[ext_resource type="Script" uid="uid://cdpbuvftblj0t" path="res://scenes/ui/uniform_range_input.gd" id="1_yg3ag"]
 
-[node name="UniformRangeInput" type="HBoxContainer"]
+[node name="UniformRangeInput" type="HBoxContainer" unique_id=8215890]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -11,16 +11,16 @@ grow_vertical = 2
 size_flags_horizontal = 3
 script = ExtResource("1_yg3ag")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=630062345]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ValueLabel" type="Label" parent="."]
+[node name="ValueLabel" type="Label" parent="." unique_id=52825973]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "#"
 
-[node name="Input" type="HSlider" parent="."]
+[node name="Input" type="HSlider" parent="." unique_id=301518013]
 custom_minimum_size = Vector2(96, 0)
 layout_mode = 2
 size_flags_vertical = 1

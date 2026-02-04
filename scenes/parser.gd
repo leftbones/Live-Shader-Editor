@@ -39,7 +39,7 @@ func get_shader_uniforms(shader_code: String) -> Array[Uniform]:
 			# Remove the "uniform" keyword, strip spaces from commas, remove unnecessary symbols (=, :, and ;)
 			line = line.replace("uniform", "").replace(", ", ",").replace("=", "").replace(":", "").replace(";", "").strip_edges()
 			var parts: PackedStringArray = line.split(" ", false)
-			print(parts)
+			# print(parts)
 
 			if parts.size() == 4: # type, name, hint, and value are present
 				var uniform_type: String = parts[0]

@@ -3,5 +3,7 @@
 /android/
 *.*.uid
 *.*.import
+
+# Other
 .vscode/
 .DS_Store

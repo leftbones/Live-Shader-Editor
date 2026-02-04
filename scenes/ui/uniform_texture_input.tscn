@@ -1,13 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://b56uewluixh1g"]
+[gd_scene format=3 uid="uid://b56uewluixh1g"]
 
-[ext_resource type="Script" uid="uid://clqnaepp8op34" path="res://scenes/ui/uniform_texture_input.gd" id="1_41lou"]
+[ext_resource type="Script" uid="uid://b3dl2wca02s8g" path="res://scenes/ui/uniform_texture_input.gd" id="1_41lou"]
 [ext_resource type="StyleBox" uid="uid://c2nb368uhhdc2" path="res://theme/panel_dark.tres" id="2_syuu7"]
 [ext_resource type="StyleBox" uid="uid://ddjp7wvxtq760" path="res://theme/button_normal.tres" id="3_ddh07"]
-[ext_resource type="Texture2D" uid="uid://be24cv0xuf0i" path="res://theme/assets/GuiDropdown.svg" id="3_s2lxc"]
+[ext_resource type="Texture2D" uid="uid://csuy3jm8y2fro" path="res://theme/assets/GuiDropdown.svg" id="3_s2lxc"]
 [ext_resource type="StyleBox" uid="uid://boi83gcjl8k8m" path="res://theme/button_pressed.tres" id="4_syuu7"]
 [ext_resource type="StyleBox" uid="uid://baus12mxqahcx" path="res://theme/button_hover.tres" id="5_slsxm"]
 
-[node name="UniformColorInput" type="HBoxContainer"]
+[node name="UniformColorInput" type="HBoxContainer" unique_id=822343937]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -15,26 +15,26 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_41lou")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=917074371]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1823759231]
 layout_mode = 2
 theme_override_styles/panel = ExtResource("2_syuu7")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=478882433]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/HBoxContainer" unique_id=887103623]
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="TexturePreview" type="TextureRect" parent="PanelContainer/HBoxContainer/MarginContainer"]
+[node name="TexturePreview" type="TextureRect" parent="PanelContainer/HBoxContainer/MarginContainer" unique_id=17299998]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(72, 72)
 layout_mode = 2
@@ -42,7 +42,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 expand_mode = 1
 
-[node name="MenuButton" type="MenuButton" parent="PanelContainer/HBoxContainer"]
+[node name="MenuButton" type="MenuButton" parent="PanelContainer/HBoxContainer" unique_id=1995732267]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/normal = ExtResource("3_ddh07")
@@ -56,8 +56,8 @@ popup/item_0/id = 0
 popup/item_1/text = "Clear"
 popup/item_1/id = 1
 
-[node name="FileDialog" type="FileDialog" parent="."]
-title = "Load Image"
+[node name="FileDialog" type="FileDialog" parent="." unique_id=1992354302]
+title = "Open a File"
 file_mode = 0
 access = 2
 filters = PackedStringArray("*.png", "*.jpg", "*.jpeg", "*.svg")

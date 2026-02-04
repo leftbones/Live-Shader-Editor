@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://uu3tq8lq3ysf"]
+[gd_scene format=3 uid="uid://uu3tq8lq3ysf"]
 
-[ext_resource type="Script" uid="uid://bg0ryulj4jhnq" path="res://scenes/ui/uniform_number_input.gd" id="1_su3uu"]
+[ext_resource type="Script" uid="uid://b5m2oo42fns4e" path="res://scenes/ui/uniform_number_input.gd" id="1_su3uu"]
 
-[node name="UniformNumberInput" type="HBoxContainer"]
+[node name="UniformNumberInput" type="HBoxContainer" unique_id=1294373856]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -11,11 +11,11 @@ grow_vertical = 2
 size_flags_horizontal = 3
 script = ExtResource("1_su3uu")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=2112349190]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Input" type="LineEdit" parent="."]
+[node name="Input" type="LineEdit" parent="." unique_id=1284027188]
 custom_minimum_size = Vector2(96, 0)
 layout_mode = 2
 alignment = 2

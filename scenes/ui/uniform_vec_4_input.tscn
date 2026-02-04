@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://c8wqr4pkt2jj4"]
+[gd_scene format=3 uid="uid://c8wqr4pkt2jj4"]
 
-[ext_resource type="Script" uid="uid://di1vv3hvdcigv" path="res://scenes/ui/uniform_vec_4_input.gd" id="1_jkacw"]
+[ext_resource type="Script" uid="uid://ccxfckyevhqn7" path="res://scenes/ui/uniform_vec_4_input.gd" id="1_jkacw"]
 
-[node name="UniformVec4Input" type="HBoxContainer"]
+[node name="UniformVec4Input" type="HBoxContainer" unique_id=971304182]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -10,26 +10,26 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_jkacw")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1526144107]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="InputX" type="LineEdit" parent="."]
+[node name="InputX" type="LineEdit" parent="." unique_id=1212171875]
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
 alignment = 2
 
-[node name="InputY" type="LineEdit" parent="."]
+[node name="InputY" type="LineEdit" parent="." unique_id=1513372857]
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
 alignment = 2
 
-[node name="InputZ" type="LineEdit" parent="."]
+[node name="InputZ" type="LineEdit" parent="." unique_id=1548997457]
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
 alignment = 2
 
-[node name="InputW" type="LineEdit" parent="."]
+[node name="InputW" type="LineEdit" parent="." unique_id=1332483736]
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
 alignment = 2

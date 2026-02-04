@@ -1,6 +1,9 @@
 class_name Main
 extends Control
 
+# TODO: Move the code editor and all of the parsing/compilation logic to its own class/file
+# TODO: Add some kind of failsafe that disables automatic compilation if the FPS drops too low or something
+
 const LOG_PATH: String = "user://logs/godot.log"
 const MESSAGE_FINISH: String = "COMPILE FINISHED"
 const MESSAGE_ERROR: String = "SHADER ERROR: "
@@ -26,11 +29,6 @@ const SYNTAX_SHADERS: PackedStringArray = ["shader_type", "render_mode", "unifor
 @onready var animate_checkbox: CheckBox = %AnimateCheckBox
 @onready var reset_preview_button: Button = %ResetPreviewButton
 @onready var shader_properties: VBoxContainer = %ShaderProperties
-@onready var load_shader_dialog: FileDialog = %LoadShaderDialog
-@onready var save_shader_dialog: FileDialog = %SaveShaderDialog
-@onready var file_menu: PopupMenu = %File
-@onready var options_menu: PopupMenu = %Options
-@onready var help_menu: PopupMenu = %Help
 
 # Preview
 var parser: Parser = Parser.new()
@@ -60,9 +58,6 @@ var colors: Dictionary[String, Color] = {
 	"syntax_number": Color("a1ffe0"),
 	"syntax_string": Color("ffeda1"),
 }
-
-# File Operations
-var save_path: String = ""
 
 
 # Called when the node enters the scene tree for the first time
@@ -225,7 +220,8 @@ func _compile_shader() -> void:
 	_check_compile_errors()
 	print(MESSAGE_FINISH)
 
-	# Update the shader properties list 
+	# Update the shader properties list
+	# TODO: Move all of this parsing logic to its own class/file -- it's already verbose and still needs it's own config file
 	for child in shader_properties.get_children():
 		child.queue_free()
 
@@ -314,7 +310,7 @@ func _compile_shader() -> void:
 			uniform_input.init(uniform.name) # I don't think it's possible to set textures in shader code directly, so there's no value to parse here
 
 			uniform_input.value_changed.connect(_set_shader_parameter)
-		
+
 		#
 		# Other
 		else:
